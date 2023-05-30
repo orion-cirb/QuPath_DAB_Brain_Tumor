@@ -1,0 +1,257 @@
+{
+  "pixel_classifier_type": "OpenCVPixelClassifier",
+  "metadata": {
+    "inputPadding": 0,
+    "inputResolution": {
+      "pixelWidth": {
+        "value": 1.3776346013894143,
+        "unit": "µm"
+      },
+      "pixelHeight": {
+        "value": 1.3776346013894143,
+        "unit": "µm"
+      },
+      "zSpacing": {
+        "value": 1.0,
+        "unit": "z-slice"
+      },
+      "timeUnit": "SECONDS",
+      "timepoints": []
+    },
+    "inputWidth": 512,
+    "inputHeight": 512,
+    "inputNumChannels": 3,
+    "outputType": "CLASSIFICATION",
+    "outputChannels": [
+      {
+        "name": "DAB",
+        "color": -8777442
+      },
+      {
+        "name": "Ignore*",
+        "color": 16776702
+      }
+    ],
+    "classificationLabels": {
+      "0": {
+        "name": "DAB",
+        "color": [
+          122,
+          17,
+          30
+        ]
+      },
+      "1": {
+        "name": "Ignore*",
+        "color": [
+          180,
+          180,
+          180
+        ]
+      }
+    }
+  },
+  "op": {
+    "type": "data.op.channels",
+    "colorTransforms": [
+      {
+        "stains": {
+          "name": "H-DAB default",
+          "stain1": {
+            "r": 0.6511078297640718,
+            "g": 0.7011930397459234,
+            "b": 0.2904942598947397,
+            "name": "Hematoxylin",
+            "isResidual": false
+          },
+          "stain2": {
+            "r": 0.2691668699565374,
+            "g": 0.5682411699082456,
+            "b": 0.7775931898744414,
+            "name": "DAB",
+            "isResidual": false
+          },
+          "stain3": {
+            "r": 0.6330435352304447,
+            "g": -0.7128599063057326,
+            "b": 0.3018056269931407,
+            "name": "Residual",
+            "isResidual": true
+          },
+          "maxRed": 255.0,
+          "maxGreen": 255.0,
+          "maxBlue": 255.0
+        },
+        "stainNumber": 1
+      },
+      {
+        "stains": {
+          "name": "H-DAB default",
+          "stain1": {
+            "r": 0.6511078297640718,
+            "g": 0.7011930397459234,
+            "b": 0.2904942598947397,
+            "name": "Hematoxylin",
+            "isResidual": false
+          },
+          "stain2": {
+            "r": 0.2691668699565374,
+            "g": 0.5682411699082456,
+            "b": 0.7775931898744414,
+            "name": "DAB",
+            "isResidual": false
+          },
+          "stain3": {
+            "r": 0.6330435352304447,
+            "g": -0.7128599063057326,
+            "b": 0.3018056269931407,
+            "name": "Residual",
+            "isResidual": true
+          },
+          "maxRed": 255.0,
+          "maxGreen": 255.0,
+          "maxBlue": 255.0
+        },
+        "stainNumber": 2
+      }
+    ],
+    "op": {
+      "type": "op.core.sequential",
+      "ops": [
+        {
+          "type": "op.core.sequential",
+          "ops": [
+            {
+              "type": "op.core.sequential",
+              "ops": [
+                {
+                  "type": "op.normalize.local",
+                  "sigmaMean": 20.0,
+                  "sigmaStdDev": 20.0
+                },
+                {
+                  "type": "op.core.split-merge",
+                  "ops": [
+                    {
+                      "type": "op.filters.multiscale",
+                      "features": [
+                        "GAUSSIAN"
+                      ],
+                      "sigmaX": 1.0,
+                      "sigmaY": 1.0
+                    },
+                    {
+                      "type": "op.filters.multiscale",
+                      "features": [
+                        "GAUSSIAN"
+                      ],
+                      "sigmaX": 2.0,
+                      "sigmaY": 2.0
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "op.ml.feature-preprocessor",
+              "preprocessor": {
+                "normalizer": {
+                  "offsets": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0
+                  ],
+                  "scales": [
+                    1.0,
+                    1.0,
+                    1.0,
+                    1.0
+                  ],
+                  "missingValue": 0.0
+                },
+                "inputLength": 4,
+                "outputLength": 4
+              }
+            }
+          ]
+        },
+        {
+          "type": "op.ml.opencv-statmodel",
+          "model": {
+            "class": "ANN_MLP",
+            "statmodel": {
+              "opencv_ml_ann_mlp": {
+                "format": 3,
+                "layer_sizes": [
+                  4,
+                  2
+                ],
+                "activation_function": "SIGMOID_SYM",
+                "f_param1": 1.0,
+                "f_param2": 1.0,
+                "min_val": -9.4999999999999996e-01,
+                "max_val": 9.4999999999999996e-01,
+                "min_val1": -9.7999999999999998e-01,
+                "max_val1": 9.7999999999999998e-01,
+                "training_params": {
+                  "train_method": "RPROP",
+                  "dw0": 1.0000000000000001e-01,
+                  "dw_plus": 1.2000000000000000e+00,
+                  "dw_minus": 5.0000000000000000e-01,
+                  "dw_min": 1.1920928955078125e-07,
+                  "dw_max": 50.0,
+                  "term_criteria": {
+                    "epsilon": 1.0000000000000000e-02,
+                    "iterations": 1000
+                  }
+                },
+                "input_scale": [
+                  7.5198304730592436e-01,
+                  -6.8427037714851563e-02,
+                  6.5641556561827330e-01,
+                  -3.3627303873676029e-01,
+                  9.5948993434397556e-01,
+                  -9.4471407626925311e-02,
+                  8.2131278412959996e-01,
+                  -3.5008255877005168e-01
+                ],
+                "output_scale": [
+                  1.0,
+                  0.0,
+                  1.0,
+                  0.0
+                ],
+                "inv_output_scale": [
+                  1.0,
+                  0.0,
+                  1.0,
+                  0.0
+                ],
+                "weights": [
+                  [
+                    -7.2103441392409506e-01,
+                    2.6517029175058199e-01,
+                    1.8863775746292690e+00,
+                    -6.5595884289818684e-01,
+                    -5.5366148482771682e-01,
+                    1.1627075605643971e+00,
+                    7.2952981888782631e-01,
+                    -1.2282313065886052e+00,
+                    -4.0752654349840185e+00,
+                    3.0566758523558168e+00
+                  ]
+                ]
+              }
+            }
+          },
+          "requestProbabilities": false
+        },
+        {
+          "type": "op.core.convert",
+          "pixelType": "UINT8"
+        }
+      ]
+    }
+  }
+}
