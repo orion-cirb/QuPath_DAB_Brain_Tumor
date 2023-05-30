@@ -2,7 +2,7 @@
 
 * **Developed for:** Belén
 * **Team:** Rouach
-* **Date:** Mai 2023
+* **Date:** May 2023
 * **Software:** QuPath
 
 ### Images description
